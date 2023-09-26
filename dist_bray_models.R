@@ -250,7 +250,6 @@ matrix_complete$Dist_km <- matrix_complete$Dist/1000
 matrix_complete$River_Dist_km <- matrix_complete$River_Dist/1000
 
 ## Plotting environment ~ Distances between sites
-#par(mai=c(0.7,0.7,0.1,0.1), mgp=c(2,1,0))
 
 par(mai=c(0.7,0.7,0.1,0.1), mgp=c(2,1,0))
 plot(matrix_complete$eucl_envi~ matrix_complete$River_Dist_km, xlab= "Distance between sites (km)",
@@ -322,23 +321,18 @@ mtext("Enviromental dissimilarity", cex = 2, side = 2, line = 3.5)
 mtext("(Euclidean distance)", cex = 1.5, side=2, line= 2)
 mtext("Distance between sites (km)", cex = 2, side = 1, line = 3)
 text(25,0.5, expression(italic('E~N')~"(4.7 + 0.006 "%*%""~italic('D')~",1.4)"), cex = 1.5)
-#points(x, fitted_mean, type="l", col="black", lwd = 3)
-
-#plot(matrix_complete$eucl_envi ~ matrix_complete$Dist_km, xlab= "Distance between sites (km)",
-#     ylab= "Enviromental distance (Euclidean distance)", pch=16, col="blue" , xlim=c(0,500)   )
 
 for(i in 1:1000){
   lines(x, asteps$a[i] + bsteps$b[i]*as.numeric(x), col = alpha("lightblue", 0.1) )
 }
 points(matrix_complete$eucl_envi ~ matrix_complete$Dist_km, pch=16, cex= 1.5)
 lines(x, median(asteps$a) + median(bsteps$b)*as.numeric(x))
-#text(20,2, expression(italic('E~N(4.7~+~0.006~D')), cex = 1.5)
 
 ### Bayesian model to test Assemblage similarity ~ Distance
 
 library(brms)
 
-## Assemblabe similarity ~ Euclidean Distance, shortest path between two points
+## Assemblabe similarity ~ Euclidean Distance, the shortest path between two points
 ## Bayesian zero-inflated beta regression
 
 hist(matrix_complete$bray_sh, col = "dark grey", border = FALSE, xlim = c(0,1))
@@ -607,60 +601,8 @@ b1_ddr_fit_e_plot <- ggplot2.violinplot(data=b1_ddr_fit_e, xName='FFG',yName="Sl
 
 b1_ddr_fit_e_plot
 
-
-### assenblages dist ggplot
-
-matrix_complete$bray_non_sh~ matrix_complete$Dist_km
-
-matrix_complete2 <- matrix_complete[,c(-4,-5,-7,-8,-10,-11,-13,-14,-16,-17)]
-mu_mu_non_p <- plogis(mu_mu_non)
-
-ggplot(matrix_complete, aes(x = Dist_km, y= bray_non_sh))
-
-ggplot(aes(x = x, y= mu_mu_non_p))
-nonsh_ggplot <- ggplot2.scatterplot(data = matrix_complete2, xName='Dist_km', yName='bray_non_sh', mainTitle="Non-shredder assemblage")+
-  ylim(0, 0.8)+
-  xlim(0,133)+
-  #geom_abline(intercept = (posterior_b_1000$.value[posterior_b_1000$.variable== "b_Intercept"] ), 
-  #            slope = (posterior_b_1000$.value[posterior_b_1000$.variable=="b_initial_size"]), color="lightblue"
-   #           , alpha = 0.05, linetype="solid", size=1.5)+
-  #geom_abline(intercept = (posterior_b_1000$.value[posterior_b_1000$.variable== "b_Intercept"] + posterior_b_1000$.value[posterior_b_1000$.variable== "b_TreatmentDialiumguianense"] ), 
-  #            slope = (posterior_b_1000$.value[posterior_b_1000$.variable=="b_initial_size"] + posterior_b_1000$.value[posterior_b_1000$.variable== "b_initial_size:TreatmentDialiumguianense"]), color="indianred1", 
-  #            linetype="solid", size=1.5, alpha = 0.05)+  
-
-  #mu_mu_non <- mean(posterior_b$.value[posterior_b$.variable == "b_Intercept"]) + mean(posterior_b$.value[posterior_b$.variable == "b_Dist_km"]) * x
-  
-  geom_line(aes(x = x, y= mu_mu_non_p))+
-  #  geom_line(aes(x, mu_mu_non_p), color="black", linetype="solid", linewidth =1.5)+
-  #geom_abline(intercept = ((mean(b_i$b_Intercept) + mean(b_D$b_TreatmentDialiumguianense))), 
-  #            slope = (mean(b_I$b_initial_size + posterior_b$.value[posterior_b$.variable== "b_initial_size:TreatmentDialiumguianense"])), color="red", 
-  #            linetype="solid", size=1.5)+  
-  geom_point(aes(size=3))+
-  labs(y= "", x='Distance between sites (Km)')+
-  theme(legend.position = "none", axis.line = element_line(linewidth =1, colour="black"),
-        #axis.text.x = element_blank(),
-        axis.line.y.left = element_line(linewidth = 0.8, colour = "black"),
-        panel.background = element_rect(fill = "white"),
-        #strip.background = element_rect(colour = "white", fill = "white"),
-        #strip.text = element_text(size = 18),
-        axis.text=element_text(size=18),
-        axis.title=element_text(size=18,face="bold"),
-        legend.text=element_text(size=14),
-        panel.border = element_rect(colour = "black", fill=NA, size=1),
-        plot.title = element_text(hjust = 0.5, size= 18)
-  )
-
-nonsh_ggplot
-
-y.grob <- textGrob("Assamblage similarity (Bray-Curtis)", 
-                   gp=gpar(fontface="bold", col="black", fontsize=20), rot=90)
-
-grid.arrange(arrangeGrob(plot, left = y.grob))
-
 ### Plotting
 
-#plot.new();
-#par(mfrow= c(1,1), mar =c(5,6,2,1.5))
 par(mfrow= c(3,3), mar =c(5.1,6,2,1.5))
 plot(matrix_complete$bray_non_sh~ matrix_complete$Dist_km, pch=16, cex= 1.5, cex.axis=2,
      ylim=c(0,0.8), xlim = c(0,133), cex.lab= 1.5, xlab= "Distance between sites (km)"
@@ -790,12 +732,3 @@ mtext("Non-Shredder",cex = 1, side = 1, at=1, line=3)
 mtext("Shredder",cex = 1, side = 1, at=1.5, line = 3)
 arrows(slope_ddr_fit_e$Index, x1= (slope_ddr_fit_e$Index), y0= (slope_ddr_fit_e$lowCI), y1= (slope_ddr_fit_e$UpCI) , code=0, angle=90, length=0.15, lwd =2, lty=1)
 abline(h= 0, lty=2, lwd= 2, col="red")
-
-
-### plotting ggplot violins
-
-## Slopes violins
-## spatial distances
-
-
-
